@@ -9,6 +9,8 @@ string adUnitId = "«...»";
     string adUnitId = "«...»";
 #endif
 
+    [SerializeField] private AdAnalyticsService _analyticsService;
+
     int retryAttempt;
 
     private void Start()
@@ -79,6 +81,8 @@ string adUnitId = "«...»";
 
     private void OnRewardedAdRevenuePaidEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
+        _analyticsService.CollectImpression(adUnitId, adInfo);
+
         var adRevenue = new AdjustAdRevenue("applovin_max_sdk");
         adRevenue.SetRevenue(adInfo.Revenue, "USD");
         adRevenue.AdRevenueNetwork = adInfo.NetworkName;

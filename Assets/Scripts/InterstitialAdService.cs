@@ -1,4 +1,5 @@
 using System;
+using System.Data.Common;
 using UnityEngine;
 
 public class InterstitialAdService : MonoBehaviour
@@ -8,6 +9,7 @@ string adUnitId = "«...»";
 #else // UNITY_ANDROID
     string adUnitId = "...»";
 #endif
+    [SerializeField] private AdAnalyticsService _analyticsService;
 
     int retryAttempt;
 
@@ -74,6 +76,8 @@ string adUnitId = "«...»";
 
     private void OnInterstitialAdRevenuePaidEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
+        _analyticsService.CollectImpression(adUnitId, adInfo);
+
         var adRevenue = new AdjustAdRevenue("applovin_max_sdk");
         adRevenue.SetRevenue(adInfo.Revenue, "USD");
         adRevenue.AdRevenueNetwork = adInfo.NetworkName;

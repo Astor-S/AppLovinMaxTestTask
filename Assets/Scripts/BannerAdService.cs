@@ -12,6 +12,8 @@ string bannerAdUnitId = "«...»"; // Retrieve the ID from your account
     private string _bannerBackgroundColorString = "#FFFFFF";
     private Color _bannerBackgroundColor;
 
+    [SerializeField] private AdAnalyticsService _analyticsService;
+
     private void Start()
     {
         if (ColorUtility.TryParseHtmlString(_bannerBackgroundColorString, out _bannerBackgroundColor) == false)
@@ -46,6 +48,8 @@ string bannerAdUnitId = "«...»"; // Retrieve the ID from your account
 
     private void OnBannerAdRevenuePaidEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
+        _analyticsService.CollectImpression(adUnitId, adInfo);
+
         var adRevenue = new AdjustAdRevenue("applovin_max_sdk");
         adRevenue.SetRevenue(adInfo.Revenue, "USD");
         adRevenue.AdRevenueNetwork = adInfo.NetworkName;
