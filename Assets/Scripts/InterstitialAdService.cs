@@ -26,6 +26,7 @@ string adUnitId = "«...»";
         MaxSdkCallbacks.Interstitial.OnAdClickedEvent += OnInterstitialClickedEvent;
         MaxSdkCallbacks.Interstitial.OnAdHiddenEvent += OnInterstitialHiddenEvent;
         MaxSdkCallbacks.Interstitial.OnAdDisplayFailedEvent += OnInterstitialAdFailedToDisplayEvent;
+        MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent += OnInterstitialAdRevenuePaidEvent;
 
         // Load the first interstitial
         LoadInterstitial();
@@ -69,5 +70,16 @@ string adUnitId = "«...»";
     {
         // Interstitial ad is hidden. Pre-load the next ad.
         LoadInterstitial();
+    }
+
+    private void OnInterstitialAdRevenuePaidEvent(string adUnitId, MaxSdk.AdInfo adInfo)
+    {
+        var adRevenue = new AdjustAdRevenue("applovin_max_sdk");
+        adRevenue.SetRevenue(adInfo.Revenue, "USD");
+        adRevenue.AdRevenueNetwork = adInfo.NetworkName;
+        adRevenue.AdRevenueUnit = adInfo.AdUnitIdentifier;
+        adRevenue.AdRevenuePlacement = adInfo.Placement;
+
+        Adjust.TrackAdRevenue(adRevenue);
     }
 }

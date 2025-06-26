@@ -79,6 +79,12 @@ string adUnitId = "«...»";
 
     private void OnRewardedAdRevenuePaidEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
-        // Ad revenue paid. Use this callback to track user revenue.
+        var adRevenue = new AdjustAdRevenue("applovin_max_sdk");
+        adRevenue.SetRevenue(adInfo.Revenue, "USD");
+        adRevenue.AdRevenueNetwork = adInfo.NetworkName;
+        adRevenue.AdRevenueUnit = adInfo.AdUnitIdentifier;
+        adRevenue.AdRevenuePlacement = adInfo.Placement;
+
+        Adjust.TrackAdRevenue(adRevenue);
     }
 }

@@ -44,7 +44,16 @@ string bannerAdUnitId = "«...»"; // Retrieve the ID from your account
 
     private void OnBannerAdClickedEvent(string adUnitId, MaxSdk.AdInfo adInfo) { }
 
-    private void OnBannerAdRevenuePaidEvent(string adUnitId, MaxSdk.AdInfo adInfo) { }
+    private void OnBannerAdRevenuePaidEvent(string adUnitId, MaxSdk.AdInfo adInfo)
+    {
+        var adRevenue = new AdjustAdRevenue("applovin_max_sdk");
+        adRevenue.SetRevenue(adInfo.Revenue, "USD");
+        adRevenue.AdRevenueNetwork = adInfo.NetworkName;
+        adRevenue.AdRevenueUnit = adInfo.AdUnitIdentifier;
+        adRevenue.AdRevenuePlacement = adInfo.Placement;
+
+        Adjust.TrackAdRevenue(adRevenue);
+    }
 
     private void OnBannerAdExpandedEvent(string adUnitId, MaxSdk.AdInfo adInfo) { }
 
