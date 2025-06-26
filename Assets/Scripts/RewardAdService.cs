@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using AdjustSdk;
 
 public class RewardAdService : MonoBehaviour
 {

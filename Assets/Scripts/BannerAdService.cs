@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using AdjustSdk;
 
 public class BannerAdService : MonoBehaviour
 {
