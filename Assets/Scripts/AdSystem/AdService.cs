@@ -21,13 +21,13 @@ namespace AdSystem
                 _rewardAdService.ShowRewarded(onRewarded);
         }
 
-        public void ShowBanner()
+        public void ShowBannerAd()
         {
             if (_bannerAdService != null)
                 _bannerAdService.ShowBanner();
         }
 
-        public void HideBanner()
+        public void HideBannerAd()
         {
             if (_bannerAdService != null)
                 _bannerAdService.HideBanner();
