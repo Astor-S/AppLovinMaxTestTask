@@ -1,5 +1,6 @@
 using UnityEngine;
 using Firebase.Analytics;
+using AdSystem.Enums;
 
 namespace AdSystem
 {
@@ -8,13 +9,13 @@ namespace AdSystem
         public void CollectImpression(string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
             Parameter[] AdParameters = new Parameter[] {
-            new Parameter("ad_platform", "applovin_max_sdk"),
-            new Parameter("ad_source", adInfo.NetworkName),
-            new Parameter("ad_unit_name", adInfo.AdUnitIdentifier),
-            new Parameter("ad_format", adInfo.Placement.ToString()),
-            new Parameter("currency", "USD"),
-            new Parameter("value", adInfo.Revenue)
-        };
+                new Parameter(AdParameterKeys.AdPlatform.ToString(), AdPlatformValue.AppLovinMaxSdk.ToString().ToLower()), 
+                new Parameter(AdParameterKeys.AdSource.ToString(), adInfo.NetworkName),
+                new Parameter(AdParameterKeys.AdUnitName.ToString(), adInfo.AdUnitIdentifier),
+                new Parameter(AdParameterKeys.AdFormat.ToString(), adInfo.Placement.ToString()),
+                new Parameter(AdParameterKeys.Currency.ToString(), AdCurrencyValue.USD.ToString()),
+                new Parameter(AdParameterKeys.Value.ToString(), adInfo.Revenue)
+            };
 
             FirebaseAnalytics.LogEvent("ad_impression", AdParameters);
         }
