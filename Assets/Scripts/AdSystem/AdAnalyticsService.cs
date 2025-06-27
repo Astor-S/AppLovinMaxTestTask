@@ -17,7 +17,9 @@ namespace AdSystem
                 new Parameter(AdParameterKeys.Value.ToString(), adInfo.Revenue)
             };
 
-            FirebaseAnalytics.LogEvent("ad_impression", AdParameters);
+            string logEventMessage = "ad_impression";
+
+            FirebaseAnalytics.LogEvent(logEventMessage, AdParameters);
         }
     }
 }

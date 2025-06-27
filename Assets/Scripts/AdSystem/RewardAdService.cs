@@ -29,8 +29,6 @@ private string _adUnitId = "«...»";
             // Attach callback
             MaxSdkCallbacks.Rewarded.OnAdLoadedEvent += OnRewardedAdLoadedEvent;
             MaxSdkCallbacks.Rewarded.OnAdLoadFailedEvent += OnRewardedAdLoadFailedEvent;
-            MaxSdkCallbacks.Rewarded.OnAdDisplayedEvent += OnRewardedAdDisplayedEvent;
-            MaxSdkCallbacks.Rewarded.OnAdClickedEvent += OnRewardedAdClickedEvent;
             MaxSdkCallbacks.Rewarded.OnAdRevenuePaidEvent += OnRewardedAdRevenuePaidEvent;
             MaxSdkCallbacks.Rewarded.OnAdHiddenEvent += OnRewardedAdHiddenEvent;
             MaxSdkCallbacks.Rewarded.OnAdDisplayFailedEvent += OnRewardedAdFailedToDisplayEvent;
@@ -72,21 +70,21 @@ private string _adUnitId = "«...»";
             // Rewarded ad failed to load
             // AppLovin recommends that you retry with exponentially higher delays, up to a maximum delay (in this case 64 seconds).
 
+            int baseForExponentiation = 2;
+            int maxRetryExponent = 6;
+            string loadMessage = "LoadInterstitial";
+
             _retryAttempt++;
-            double retryDelay = Math.Pow(2, Math.Min(6, _retryAttempt));
+            double retryDelay = Math.Pow(baseForExponentiation, Math.Min(maxRetryExponent, _retryAttempt));
 
-            Invoke("LoadRewardedAd", (float)retryDelay);
+            Invoke(loadMessage, (float)retryDelay);
         }
-
-        private void OnRewardedAdDisplayedEvent(string adUnitId, MaxSdk.AdInfo adInfo) { }
 
         private void OnRewardedAdFailedToDisplayEvent(string adUnitId, MaxSdk.ErrorInfo errorInfo, MaxSdk.AdInfo adInfo)
         {
             // Rewarded ad failed to display. AppLovin recommends that you load the next ad.
             LoadRewardedAd();
         }
-
-        private void OnRewardedAdClickedEvent(string adUnitId, MaxSdk.AdInfo adInfo) { }
 
         private void OnRewardedAdHiddenEvent(string adUnitId, MaxSdk.AdInfo adInfo)
         {

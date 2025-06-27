@@ -27,8 +27,6 @@ private string _adUnitId = "«...»";
             // Attach callback
             MaxSdkCallbacks.Interstitial.OnAdLoadedEvent += OnInterstitialLoadedEvent;
             MaxSdkCallbacks.Interstitial.OnAdLoadFailedEvent += OnInterstitialLoadFailedEvent;
-            MaxSdkCallbacks.Interstitial.OnAdDisplayedEvent += OnInterstitialDisplayedEvent;
-            MaxSdkCallbacks.Interstitial.OnAdClickedEvent += OnInterstitialClickedEvent;
             MaxSdkCallbacks.Interstitial.OnAdHiddenEvent += OnInterstitialHiddenEvent;
             MaxSdkCallbacks.Interstitial.OnAdDisplayFailedEvent += OnInterstitialAdFailedToDisplayEvent;
             MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent += OnInterstitialAdRevenuePaidEvent;
@@ -61,21 +59,21 @@ private string _adUnitId = "«...»";
             // Interstitial ad failed to load
             // AppLovin recommends that you retry with exponentially higher delays, up to a maximum delay (in this case 64 seconds)
 
+            int baseForExponentiation = 2;
+            int maxRetryExponent = 6;
+            string loadMessage = "LoadInterstitial";
+
             _retryAttempt++;
-            double retryDelay = Math.Pow(2, Math.Min(6, _retryAttempt));
+            double retryDelay = Math.Pow(baseForExponentiation, Math.Min(maxRetryExponent, _retryAttempt));
 
-            Invoke("LoadInterstitial", (float)retryDelay);
+            Invoke(loadMessage, (float)retryDelay);
         }
-
-        private void OnInterstitialDisplayedEvent(string adUnitId, MaxSdk.AdInfo adInfo) { }
 
         private void OnInterstitialAdFailedToDisplayEvent(string adUnitId, MaxSdk.ErrorInfo errorInfo, MaxSdk.AdInfo adInfo)
         {
             // Interstitial ad failed to display. AppLovin recommends that you load the next ad.
             LoadInterstitial();
         }
-
-        private void OnInterstitialClickedEvent(string adUnitId, MaxSdk.AdInfo adInfo) { }
 
         private void OnInterstitialHiddenEvent(string adUnitId, MaxSdk.AdInfo adInfo)
         {

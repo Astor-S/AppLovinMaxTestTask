@@ -37,12 +37,7 @@ private string _bannerAdUnitId = "«...»"; // Retrieve the ID from your account
             // Set background color for banners to be fully functional
             MaxSdk.SetBannerBackgroundColor(_bannerAdUnitId, _bannerBackgroundColor);
 
-            MaxSdkCallbacks.Banner.OnAdLoadedEvent += OnBannerAdLoadedEvent;
-            MaxSdkCallbacks.Banner.OnAdLoadFailedEvent += OnBannerAdLoadFailedEvent;
-            MaxSdkCallbacks.Banner.OnAdClickedEvent += OnBannerAdClickedEvent;
             MaxSdkCallbacks.Banner.OnAdRevenuePaidEvent += OnBannerAdRevenuePaidEvent;
-            MaxSdkCallbacks.Banner.OnAdExpandedEvent += OnBannerAdExpandedEvent;
-            MaxSdkCallbacks.Banner.OnAdCollapsedEvent += OnBannerAdCollapsedEvent;
 
             HideBanner();
         }
@@ -65,12 +60,6 @@ private string _bannerAdUnitId = "«...»"; // Retrieve the ID from your account
             }
         }
 
-        private void OnBannerAdLoadedEvent(string adUnitId, MaxSdk.AdInfo adInfo) { }
-
-        private void OnBannerAdLoadFailedEvent(string adUnitId, MaxSdk.ErrorInfo errorInfo) { }
-
-        private void OnBannerAdClickedEvent(string adUnitId, MaxSdk.AdInfo adInfo) { }
-
         private void OnBannerAdRevenuePaidEvent(string adUnitId, MaxSdk.AdInfo adInfo)
         {
             _analyticsService.CollectImpression(adUnitId, adInfo);
@@ -83,9 +72,5 @@ private string _bannerAdUnitId = "«...»"; // Retrieve the ID from your account
 
             Adjust.TrackAdRevenue(adRevenue);
         }
-
-        private void OnBannerAdExpandedEvent(string adUnitId, MaxSdk.AdInfo adInfo) { }
-
-        private void OnBannerAdCollapsedEvent(string adUnitId, MaxSdk.AdInfo adInfo) { }
     }
 }
