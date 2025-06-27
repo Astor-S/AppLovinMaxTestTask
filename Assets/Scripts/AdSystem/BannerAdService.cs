@@ -1,21 +1,22 @@
 ﻿using UnityEngine;
 using AdjustSdk;
+using AdSystem.Enums;
 
 namespace AdSystem
 {
     public class BannerAdService : MonoBehaviour
     {
+        [SerializeField] private AdAnalyticsService _analyticsService;
+        [SerializeField] private string _bannerBackgroundColorString = "#FFFFFF";
+
+        private Color _bannerBackgroundColor;
+
 #if UNITY_IOS
-string bannerAdUnitId = "«...»"; // Retrieve the ID from your account
+private string _bannerAdUnitId = "«...»"; // Retrieve the ID from your account
 #else // UNITY_ANDROID
         private string _bannerAdUnitId = "«...»"; // Retrieve the ID from your account
 #endif
 
-        [SerializeField]
-        private string _bannerBackgroundColorString = "#FFFFFF";
-        private Color _bannerBackgroundColor;
-
-        [SerializeField] private AdAnalyticsService _analyticsService;
         private bool _bannerIsVisible = false;
 
         private void Start()
@@ -74,8 +75,8 @@ string bannerAdUnitId = "«...»"; // Retrieve the ID from your account
         {
             _analyticsService.CollectImpression(adUnitId, adInfo);
 
-            var adRevenue = new AdjustAdRevenue("applovin_max_sdk");
-            adRevenue.SetRevenue(adInfo.Revenue, "USD");
+            var adRevenue = new AdjustAdRevenue(AdPlatformValue.AppLovinMaxSdk.ToString());
+            adRevenue.SetRevenue(adInfo.Revenue, AdCurrencyValue.USD.ToString());
             adRevenue.AdRevenueNetwork = adInfo.NetworkName;
             adRevenue.AdRevenueUnit = adInfo.AdUnitIdentifier;
             adRevenue.AdRevenuePlacement = adInfo.Placement;

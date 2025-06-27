@@ -1,20 +1,21 @@
 using System;
 using UnityEngine;
 using AdjustSdk;
+using AdSystem.Enums;
 
 namespace AdSystem
 {
     public class RewardAdService : MonoBehaviour
     {
-#if UNITY_IOS
-string adUnitId = "«...»";
-#else // UNITY_ANDROID
-        string adUnitId = "«...»";
-#endif
-
         [SerializeField] private AdAnalyticsService _analyticsService;
 
-        int retryAttempt;
+#if UNITY_IOS
+private string _adUnitId = "«...»";
+#else // UNITY_ANDROID
+        private string _adUnitId = "«...»";
+#endif
+
+        private int _retryAttempt;
 
         private Action _onRewarded;
 
@@ -41,10 +42,10 @@ string adUnitId = "«...»";
 
         public void ShowRewarded(Action onRewarded)
         {
-            if (MaxSdk.IsRewardedAdReady(adUnitId))
+            if (MaxSdk.IsRewardedAdReady(_adUnitId))
             {
                 _onRewarded = onRewarded;
-                MaxSdk.ShowRewardedAd(adUnitId);
+                MaxSdk.ShowRewardedAd(_adUnitId);
             }
             else
             {
@@ -55,7 +56,7 @@ string adUnitId = "«...»";
 
         private void LoadRewardedAd()
         {
-            MaxSdk.LoadRewardedAd(adUnitId);
+            MaxSdk.LoadRewardedAd(_adUnitId);
         }
 
         private void OnRewardedAdLoadedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
@@ -63,7 +64,7 @@ string adUnitId = "«...»";
             // Rewarded ad is ready for you to show. MaxSdk.IsRewardedAdReady(adUnitId) now returns 'true'.
 
             // Reset retry attempt
-            retryAttempt = 0;
+            _retryAttempt = 0;
         }
 
         private void OnRewardedAdLoadFailedEvent(string adUnitId, MaxSdk.ErrorInfo errorInfo)
@@ -71,8 +72,8 @@ string adUnitId = "«...»";
             // Rewarded ad failed to load
             // AppLovin recommends that you retry with exponentially higher delays, up to a maximum delay (in this case 64 seconds).
 
-            retryAttempt++;
-            double retryDelay = Math.Pow(2, Math.Min(6, retryAttempt));
+            _retryAttempt++;
+            double retryDelay = Math.Pow(2, Math.Min(6, _retryAttempt));
 
             Invoke("LoadRewardedAd", (float)retryDelay);
         }
@@ -103,8 +104,8 @@ string adUnitId = "«...»";
         {
             _analyticsService.CollectImpression(adUnitId, adInfo);
 
-            var adRevenue = new AdjustAdRevenue("applovin_max_sdk");
-            adRevenue.SetRevenue(adInfo.Revenue, "USD");
+            var adRevenue = new AdjustAdRevenue(AdPlatformValue.AppLovinMaxSdk.ToString());
+            adRevenue.SetRevenue(adInfo.Revenue, AdCurrencyValue.USD.ToString());
             adRevenue.AdRevenueNetwork = adInfo.NetworkName;
             adRevenue.AdRevenueUnit = adInfo.AdUnitIdentifier;
             adRevenue.AdRevenuePlacement = adInfo.Placement;

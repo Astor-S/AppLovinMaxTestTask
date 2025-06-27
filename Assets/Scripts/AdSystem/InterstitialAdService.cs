@@ -1,19 +1,21 @@
 using System;
 using UnityEngine;
 using AdjustSdk;
+using AdSystem.Enums;
 
 namespace AdSystem
 {
     public class InterstitialAdService : MonoBehaviour
     {
-#if UNITY_IOS
-string adUnitId = "«...»";
-#else // UNITY_ANDROID
-        string adUnitId = "...»";
-#endif
         [SerializeField] private AdAnalyticsService _analyticsService;
 
-        int retryAttempt;
+#if UNITY_IOS
+private string _adUnitId = "«...»";
+#else // UNITY_ANDROID
+        private string _adUnitId = "«...»";
+#endif
+
+        private int _retryAttempt;
 
         private void Start()
         {
@@ -37,13 +39,13 @@ string adUnitId = "«...»";
 
         public void ShowInterstitial()
         {
-            if (MaxSdk.IsInterstitialReady(adUnitId))
-                MaxSdk.ShowInterstitial(adUnitId);
+            if (MaxSdk.IsInterstitialReady(_adUnitId))
+                MaxSdk.ShowInterstitial(_adUnitId);
         }
 
         private void LoadInterstitial()
         {
-            MaxSdk.LoadInterstitial(adUnitId);
+            MaxSdk.LoadInterstitial(_adUnitId);
         }
 
         private void OnInterstitialLoadedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
@@ -51,7 +53,7 @@ string adUnitId = "«...»";
             // Interstitial ad is ready for you to show. MaxSdk.IsInterstitialReady(adUnitId) now returns 'true'
 
             // Reset retry attempt
-            retryAttempt = 0;
+            _retryAttempt = 0;
         }
 
         private void OnInterstitialLoadFailedEvent(string adUnitId, MaxSdk.ErrorInfo errorInfo)
@@ -59,8 +61,8 @@ string adUnitId = "«...»";
             // Interstitial ad failed to load
             // AppLovin recommends that you retry with exponentially higher delays, up to a maximum delay (in this case 64 seconds)
 
-            retryAttempt++;
-            double retryDelay = Math.Pow(2, Math.Min(6, retryAttempt));
+            _retryAttempt++;
+            double retryDelay = Math.Pow(2, Math.Min(6, _retryAttempt));
 
             Invoke("LoadInterstitial", (float)retryDelay);
         }
@@ -85,8 +87,8 @@ string adUnitId = "«...»";
         {
             _analyticsService.CollectImpression(adUnitId, adInfo);
 
-            var adRevenue = new AdjustAdRevenue("applovin_max_sdk");
-            adRevenue.SetRevenue(adInfo.Revenue, "USD");
+            var adRevenue = new AdjustAdRevenue(AdPlatformValue.AppLovinMaxSdk.ToString());
+            adRevenue.SetRevenue(adInfo.Revenue, AdCurrencyValue.USD.ToString());
             adRevenue.AdRevenueNetwork = adInfo.NetworkName;
             adRevenue.AdRevenueUnit = adInfo.AdUnitIdentifier;
             adRevenue.AdRevenuePlacement = adInfo.Placement;

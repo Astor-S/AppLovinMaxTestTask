@@ -9,7 +9,7 @@ namespace AdSystem
         public void CollectImpression(string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
             Parameter[] AdParameters = new Parameter[] {
-                new Parameter(AdParameterKeys.AdPlatform.ToString(), AdPlatformValue.AppLovinMaxSdk.ToString().ToLower()), 
+                new Parameter(AdParameterKeys.AdPlatform.ToString(), AdPlatformValue.AppLovinMaxSdk.ToString()), 
                 new Parameter(AdParameterKeys.AdSource.ToString(), adInfo.NetworkName),
                 new Parameter(AdParameterKeys.AdUnitName.ToString(), adInfo.AdUnitIdentifier),
                 new Parameter(AdParameterKeys.AdFormat.ToString(), adInfo.Placement.ToString()),
